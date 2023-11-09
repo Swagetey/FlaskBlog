@@ -1,0 +1,7 @@
+<p>Уважаемый {{ user.username }},</p>
+<p>Добро пожаловать на ресурс <b>Flasky</b>!</p>
+<p>Для подтверждения вашего аккаунта, пожалуйста <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">click here</a>.</p>
+<p>Альтернативно вы можете вставить ссылку ниже в адресную строку браузера</p>
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p>С уважением,</p>
+<p>Flasky </p>

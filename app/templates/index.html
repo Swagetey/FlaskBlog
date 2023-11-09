@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky{% endblock %}
+
+
+{% block page_content %}
+<div class="page-header">
+    {% if current_user.is_authenticated %}
+    <h1>Добро пожаловать, {{ current_user.username }}!</h1>
+    {% else %}
+    <h1>Незнакомец</h1>
+    {% endif %}
+</div>
+<!--<form action="" method="post">-->
+<!--    {{ form.hidden_tag() }}-->
+<!--    <div class="form-group">-->
+<!--        <div class="col-3 p-0">-->
+<!--            {{ form.name.label }}-->
+<!--            {{ form.name(class_="form-control", size=32) }}-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {{form.submit(class_="btn btn-secondary")}}-->
+<!--</form>-->
+
+{% endblock %}
