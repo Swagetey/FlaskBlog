@@ -27,6 +27,7 @@
         </div>
         {{form.submit(class_="btn btn-secondary")}}
     </form>
+    <p>Забыли пароль?<a href="{{ url_for('auth.password_reset_request') }}">Нажмите, чтобы восстановить</a>.</p>
     <p>
         Новый пользователь?
         <a href="{{ url_for('auth.register') }}">

@@ -37,3 +37,20 @@ class ChangePasswordForm(FlaskForm):
         InputRequired(), EqualTo('password2', message='Пароли должны совпадать')])
     password2 = PasswordField('Повторите новый пароль', validators=[InputRequired()])
     submit = SubmitField("Обновить пароль")
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Length(1, 64),
+                                             Email()])
+    submit = SubmitField('Сбросить пароль')
+
+class PasswordResetForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Length(1, 64),
+                                             Email()])
+    password = PasswordField('Новый пароль', validators=[
+        InputRequired(), EqualTo('password2', message='Пароли должны совпадать')])
+    password2 = PasswordField('Confirm password', validators=[InputRequired()])
+    submit = SubmitField('Reset Password')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is None:
+            raise ValidationError('Такого пароля не существует')

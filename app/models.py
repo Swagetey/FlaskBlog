@@ -44,14 +44,14 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_confirmation_token(self, expiration=3600):
-        reset_token = jwt.encode(
+        generate_token = jwt.encode(
             {'confirm': self.id,
              'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)
              },
             current_app.config['SECRET_KEY'],
             algorithm='HS256'
         )
-        return reset_token
+        return generate_token
 
     def confirm(self, token):
         try:
@@ -67,4 +67,31 @@ class User(UserMixin, db.Model):
             return False
         self.confirmed = True
         db.session.add(self)
+        return True
+
+    def generate_reset_token(self, expiration=3600):
+        token_res = jwt.encode(
+            {'reset': self.id,
+             'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)
+             },
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
+        return token_res
+
+    def reset_password(self, token, new_password):
+        try:
+            data = jwt.decode(
+                token,
+                current_app.config["SECRET_KEY"],
+                leeway=datetime.timedelta(seconds=10),
+                algorithms=["HS256"]
+            )
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        db.session.commit()
         return True
