@@ -27,7 +27,8 @@
     <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
         <ul class="nav navbar-nav">
             {% if current_user.is_authenticated %}
-            <li><a href="{{ url_for('main.user', username=current_user.username) }} " class="text-decoration-none text-light">Profile</a>
+            <li><a href="{{ url_for('main.user', username=current_user.username) }} "
+                   class="text-decoration-none text-light">Profile</a>
             </li>
             {% endif %}
         </ul>
@@ -58,12 +59,13 @@
         {{ message }}
     </div>
     {% endfor %}
-    {% block page_content %}
 
+    {% block page_content %}
     {% endblock %}
 
 </div>
 {% endblock %}
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

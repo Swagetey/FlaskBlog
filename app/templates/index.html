@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Flasky{% endblock %}
 
@@ -10,16 +11,31 @@
     {% else %}
     <h1>Незнакомец</h1>
     {% endif %}
+    {% if current_user.can(Permission.WRITE) %}
+    {{ wtf.quick_form(form, button_map={'submit':'secondary'}) }}
+    {% endif %}
 </div>
-<!--<form action="" method="post">-->
-<!--    {{ form.hidden_tag() }}-->
-<!--    <div class="form-group">-->
-<!--        <div class="col-3 p-0">-->
-<!--            {{ form.name.label }}-->
-<!--            {{ form.name(class_="form-control", size=32) }}-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    {{form.submit(class_="btn btn-secondary")}}-->
-<!--</form>-->
+<div class="container mt-5">
+
+    <div class="row">
+
+        <div class="col">
+            {% for post in posts %}
+            <div class="card p-3">
+                <div class="d-flex flex-row mb-3"><a href="{{ url_for('.user', username=post.author.username) }}">
+                    <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
+                </a>
+                    <div class="d-flex flex-column ml-2"><span>{{ post.author.username }}</span>
+                        <span class="text-black-50">Город: {{ post.author.location }}</span>
+                    </div>
+                </div>
+                <h6>{{ post.body }}</h6>
+                <div class="d-flex justify-content-between install mt-3"><span>Опубликовано: {{ moment(post.timestamp).fromNow() }}</span><span
+                        class="text-primary">View&nbsp;<i class="fa fa-angle-right"></i></span></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock %}
