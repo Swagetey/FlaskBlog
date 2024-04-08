@@ -1,25 +1,8 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-
-{% block title %}Flasky{% endblock %}
-
-
-{% block page_content %}
-<div class="page-header">
-    {% if current_user.is_authenticated %}
-    <h1>Добро пожаловать, {{ current_user.username }}!</h1>
-    {% else %}
-    <h1>Незнакомец</h1>
-    {% endif %}
-    {% if current_user.can(Permission.WRITE) %}
-    {{ wtf.quick_form(form, button_map={'submit':'secondary'}) }}
-    {% endif %}
-</div>
 <div class="container mt-5">
     <div class="row">
         <div class="col">
             {% for post in posts %}
-            <div class="card p-3 mb-3">
+            <div class="card mb-3 p-3">
                 <div class="d-flex flex-row mb-3"><a href="{{ url_for('.user', username=post.author.username) }}">
                     <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
                 </a>
@@ -35,5 +18,3 @@
         </div>
     </div>
 </div>
-
-{% endblock %}
