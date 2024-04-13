@@ -10,9 +10,24 @@
                         <span class="text-black-50">Город: {{ post.author.location }}</span>
                     </div>
                 </div>
+                {% if post.body_html %}
+                <h6>{{ post.body_html | safe }}</h6>
+                {% else %}
                 <h6>{{ post.body }}</h6>
-                <div class="d-flex justify-content-between install mt-3"><span>Опубликовано: {{ moment(post.timestamp).fromNow() }}</span><span
-                        class="text-primary">View&nbsp;<i class="fa fa-angle-right"></i></span></div>
+                {% endif %}
+                <div class="d-flex bd-highlight">
+                    <span class="p-2 flex-grow-1 bd-highlight">Опубликовано: {{ moment(post.timestamp).fromNow() }}</span>
+                    {% if current_user == post.author %}
+                    <a class="text-decoration-none p-2 bd-highlight" href="{{ url_for('.edit', id=post.id) }}"><span
+                            class="badge bg-dark text-light">Редактировать</span></a>
+                    {% elif current_user.is_administrator() %}
+                    <a class="text-decoration-none p-2 bd-highlight" href="{{url_for('.edit', id=post.id)}}"><span
+                            class="badge bg-danger">Редактировать</span></a>
+                    {% endif %}
+                    <a class="text-decoration-none p-2 bd-highlight" href="{{url_for('.post', id=post.id)}}"><span
+                            class="badge bg-primary text-light">Permalink</span></a>
+
+                </div>
             </div>
             {% endfor %}
         </div>

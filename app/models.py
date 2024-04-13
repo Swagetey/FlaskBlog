@@ -6,6 +6,8 @@ import jwt
 from flask import current_app
 from datetime import datetime
 import hashlib
+from markdown import markdown
+import bleach
 from flask import request
 
 
@@ -220,8 +222,17 @@ class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i',
+                        'strong']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
 
     @staticmethod
     def generate_fake(count=100):
@@ -237,3 +248,5 @@ class Post(db.Model):
                      author=u)
             db.session.add(p)
             db.session.commit()
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
