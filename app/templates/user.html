@@ -9,7 +9,7 @@
         <p>
             {% if user.name %}{{ user.name }}{% endif %}
             {% if user.location %}
-            Из <a href="http://maps.google.com/?q={{ user.location }}">
+            Из города: <a href="http://maps.google.com/?q={{ user.location }}">
             {{ user.location }}
         </a>
             {% endif %}
@@ -20,6 +20,20 @@
         <p>
             Зарегестрирован с {{ moment(user.member_since).format('L') }}.
             Последний раз смотрели {{ moment(user.last_seen).fromNow() }}.
+        </p>
+        <p>
+            {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+            {% if not current_user.is_following(user) %}
+            <a href="{{ url_for('.follow', username=user.username) }}" class="badge bg-secondary text-light">Подписаться</a>
+            {% else %}
+            <a href="{{ url_for('.unfollow', username=user.username) }}" class="badge bg-danger text-light">Отписаться</a>
+            {% endif %}
+            {% endif %}
+            <a class="text-decoration-none text-dark" href="{{ url_for('.followers', username=user.username) }}">Подписчики: <span class="badge bg-dark text-light">{{ user.followers.count() }}</span></a>
+            <a class="text-decoration-none text-dark" href="{{ url_for('.followed_by', username=user.username) }}">Подписки: <span class="badge bg-dark text-light">{{ user.followed.count() }}</span></a>
+            {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+            | <span class="badge bg-success text-light ">Подписан на вас</span>
+            {% endif %}
         </p>
         {% if user == current_user %}
         <a class="btn btn-secondary" href="{{ url_for('main.edit_profile') }}">Редактировать профиль</a>
